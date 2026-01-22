@@ -1,3 +1,8 @@
 import { app } from "./app.js";
+import { logger } from "./utilities/logger.js";
+import { setupGracefulShutdown } from "./utilities/shutdown.js";
 
-app.listen(3000,() => console.log("Server is listen on port 3000"));
+const server = app.listen(3000,() => logger.info(`Server is running on port 3000`));
+
+// Initialize shutdown manager
+setupGracefulShutdown(server);
