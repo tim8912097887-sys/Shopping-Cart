@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+import { CreateUserType } from "../schema/creatUser.schema.js";
 
 type State = "success" | "error";
 
@@ -6,9 +8,12 @@ type ErrorObject = {
     detail: string
 }
 
-type Data = {
+type User = Omit<CreateUserType,"confirmPassword" | "password"> & { _id: mongoose.Types.ObjectId }
 
-} | null
+type Data = {
+   user: User
+   accessToken?: string
+} | { accessToken: string }
 type PartialResponse = {
    data?: Data | null
    error?: ErrorObject | null

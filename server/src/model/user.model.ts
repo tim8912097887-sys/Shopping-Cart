@@ -1,9 +1,22 @@
 import mongoose from "mongoose";
-import { blacklist, isEmail } from "validator";
+import v from "validator";
 import { comparePassword, hashPassword } from "../utilities/passwordUtilities.js";
 import { ApiError, ErrorCode, ErrorType } from "../custom/ApiError.js";
 
-const userSchema = new mongoose.Schema({
+interface IUser extends mongoose.Document {
+    username: string
+    email: string
+    password: string
+    isAdmin: boolean
+}
+
+interface IUserMethods {
+    passwordCompare(password: string): Promise<boolean>;
+}
+
+type UserModelType = mongoose.Model<IUser, {}, IUserMethods>;
+
+const userSchema = new mongoose.Schema<IUser, UserModelType, IUserMethods>({
     username: {
         type: String,
         required: [true,"Username required"],
@@ -16,7 +29,7 @@ const userSchema = new mongoose.Schema({
         // Remove dangerous character 
         setter: (val: string) => {
             const stripedString = '\'`"\\\\/<>&';
-            return blacklist(val,stripedString);
+            return v.blacklist(val,stripedString);
         }
     },
     email: {
@@ -30,7 +43,7 @@ const userSchema = new mongoose.Schema({
         lowercase: true,
         validate: {
            validator: (val: string) => {
-               return isEmail(val);
+               return v.isEmail(val);
            },
            message: "Invalid Email"
         }
@@ -46,7 +59,7 @@ const userSchema = new mongoose.Schema({
            validator: (val: string) => {
                return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/.test(val);
            },
-           message: "Password should include small and big alphebat and number and one special character"
+           message: "Password should include small and big letter and number and one special character"
         }
     },
     isAdmin: {
@@ -60,13 +73,14 @@ const userSchema = new mongoose.Schema({
 })
 // Hash password before save
 userSchema.pre("save",async function() {
-    if(this.isModified("password")) return;
+    if(!this.isModified("password")) return;
         const hashedPassword = await hashPassword(this.password,12);
         this.password = hashedPassword;
     return;
 })
 // Instance function reduce service code
 userSchema.methods.passwordCompare = async function (password: string) {
+
     const isMatch = await comparePassword(password,this.password);
     return isMatch;
 }
@@ -116,4 +130,4 @@ userSchema.post("save", async function (error: any, _: any,__: any) {
     );
 });
 
-export const UserModel = mongoose.model("users",userSchema);
+export const UserModel = mongoose.model<IUser, UserModelType>("users",userSchema);
