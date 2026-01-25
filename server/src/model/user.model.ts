@@ -8,6 +8,8 @@ interface IUser extends mongoose.Document {
     email: string
     password: string
     isAdmin: boolean
+    loginAttempts: number
+    loginUtils: number
 }
 
 interface IUserMethods {
@@ -67,6 +69,18 @@ const userSchema = new mongoose.Schema<IUser, UserModelType, IUserMethods>({
         default: false,
         // Prevent accidentally change
         immutable: true
+    },
+    loginAttempts: {
+        type: Number,
+        min: [0,"Attempts time not allow negative"],
+        max: [3,"Attempts time not greater than three"],
+        default: 0,
+        required: [true,"LoginAttempts required"],
+    },
+    loginUtils: {
+        type: Number,
+        // Minus one for nothing
+        default: -1,
     }
 },{
     timestamps: true

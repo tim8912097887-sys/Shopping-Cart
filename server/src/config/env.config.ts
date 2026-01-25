@@ -9,8 +9,9 @@ const envSchema = z.object({
     REFRESH_TOKEN_SECRET: z.string("Secret must be a string").nonempty("Secret can't be empty"),
     ACCESS_TOKEN_SECRET: z.string("Secret must be a string").nonempty("Secret can't be empty"),
     REFRESH_TOKEN_EXPIRED: z.string("Expired Time must be a string").nonempty("Expired Time can't be empty"),
-    ACCESS_TOKEN_EXPIRED: z.string("Expired Time must be a string").nonempty("Expired Time can't be empty")
-   
+    ACCESS_TOKEN_EXPIRED: z.string("Expired Time must be a string").nonempty("Expired Time can't be empty"),
+    ATTEMPT_TIME: z.string("Attempt Time must be a string").nonempty("Attempt Time can't be empty"),
+    ACCOUNT_LOCK_TIME: z.string("Account Lock Time must be a string").nonempty("Account Lock Time can't be empty")
 })
 
 const result = envSchema.safeParse(process.env);
