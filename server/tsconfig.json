@@ -16,5 +16,5 @@
     },
     "include": ["src/**/*.ts"],
     // Exclude test file and node_modules
-    "exclude": ["**/*.test.ts","**/*.spec.ts","node_modules"]
+    "exclude": ["node_modules"]
 }
