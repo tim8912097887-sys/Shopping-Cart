@@ -4,7 +4,8 @@ export default {
   testEnvironment: 'node',
   rootDir: './src',
   extensionsToTreatAsEsm: ['.ts'],
-  setupFiles: ["../jest.setup.js"],
+  setupFiles: ["./jest.setup.ts"],
+  setupFilesAfterEnv: ["./jest.setup.ts"],
   moduleNameMapper: {
     // This handles the .js extension in imports which NodeNext requires
     '^(\\.{1,2}/.*)\\.js$': '$1',

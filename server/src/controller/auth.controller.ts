@@ -52,7 +52,7 @@ export const refreshController = asyncHandler((req,res) => {
     if(!refreshToken) throw new ApiError(ErrorType.UNAUTHORIZED,ErrorCode.UNAUTHORIZED,"Unauthentication",true);
     const decode = verifyToken(refreshToken,env.REFRESH_TOKEN_SECRET);
     const payload = { sub: decode.sub as string };
-     const accessTokenExpired = Number(env.ACCESS_TOKEN_EXPIRED);
+    const accessTokenExpired = Number(env.ACCESS_TOKEN_EXPIRED);
     const accessToken = generateToken(payload,env.ACCESS_TOKEN_SECRET,accessTokenExpired);
     const refreshTokenExpired = Number(env.REFRESH_TOKEN_EXPIRED);
     const newRefreshToken = generateToken(payload,env.REFRESH_TOKEN_SECRET,refreshTokenExpired);

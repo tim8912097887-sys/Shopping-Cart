@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import v from "validator";
 import { comparePassword, hashPassword } from "../utilities/passwordUtilities.js";
 import { ApiError, ErrorCode, ErrorType } from "../custom/ApiError.js";
+import { env } from "../config/env.config.js";
 
 interface IUser extends mongoose.Document {
     username: string
@@ -88,7 +89,8 @@ const userSchema = new mongoose.Schema<IUser, UserModelType, IUserMethods>({
 // Hash password before save
 userSchema.pre("save",async function() {
     if(!this.isModified("password")) return;
-        const hashedPassword = await hashPassword(this.password,12);
+        const salt = env.NODE_ENV==="test"?5:12;
+        const hashedPassword = await hashPassword(this.password,salt);
         this.password = hashedPassword;
     return;
 })

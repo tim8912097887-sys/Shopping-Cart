@@ -16,7 +16,7 @@ export const createUser = async(user: CreateUserType) => {
 
 export const loginUser = async(user: LoginUserType) => {
 
-    const existUser = await UserModel.findOne({ email: user.email }).select("+password");
+    let existUser = await UserModel.findOne({ email: user.email }).select("+password");
     if(!existUser) throw new ApiError(ErrorType.BAD_REQUEST,ErrorCode.BAD_REQUEST,`Email or Password is not correct`,true);
     // Check if it's currently locked
     const isLock = existUser.loginUtils && existUser.loginUtils>Date.now();
@@ -38,7 +38,7 @@ export const loginUser = async(user: LoginUserType) => {
           existUser.loginAttempts = 0;
           existUser.loginUtils = -1;
           // Wait for data store
-          await existUser.save();
+          existUser = await existUser.save();
     }
     const { password,...withoutPassword } = existUser.toObject();
     return withoutPassword;
