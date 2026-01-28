@@ -4,7 +4,8 @@ export enum ErrorType {
    UNAUTHORIZED = 'Unauthorized',
    FORBIDDEN = 'Forbidden',
    SERVER_ERROR = 'ServerError',
-   SERVER_CONFLICT = 'ServerConflict'
+   SERVER_CONFLICT = 'ServerConflict',
+   TOO_MANY_REQUEST = 'TooManyRequest'
 }
 
 export enum ErrorCode {
@@ -13,7 +14,8 @@ export enum ErrorCode {
    UNAUTHORIZED = 401,
    FORBIDDEN = 403,
    SERVER_ERROR = 500,
-   SERVER_CONFLICT = 409
+   SERVER_CONFLICT = 409,
+   TOO_MANY_REQUEST = 429
 }
 
 export class ApiError extends Error {

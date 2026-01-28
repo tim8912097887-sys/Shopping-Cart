@@ -11,7 +11,12 @@ const envSchema = z.object({
     REFRESH_TOKEN_EXPIRED: z.string("Expired Time must be a string").nonempty("Expired Time can't be empty"),
     ACCESS_TOKEN_EXPIRED: z.string("Expired Time must be a string").nonempty("Expired Time can't be empty"),
     ATTEMPT_TIME: z.string("Attempt Time must be a string").nonempty("Attempt Time can't be empty"),
-    ACCOUNT_LOCK_TIME: z.string("Account Lock Time must be a string").nonempty("Account Lock Time can't be empty")
+    ACCOUNT_LOCK_TIME: z.string("Account Lock Time must be a string").nonempty("Account Lock Time can't be empty"),
+    REDIS_HOST: z.string("Redis host must be a string").nonempty("Redis host can't be empty"),
+    REDIS_PORT: z.string("Redis port must be a string").nonempty("Redis port can't be empty"),
+    REDIS_PASSWORD: z.string("Redis password must be a string").nonempty("Redis password can't be empty"),
+    LOGIN_WINDOW_FRAME: z.string("Login window frame must be a string").nonempty("Login window frame can't be empty"),
+    LOGIN_WINDOW_TIMES: z.string("Login window times must be a string").nonempty("Login window times can't be empty")
 })
 
 const result = envSchema.safeParse(process.env);
