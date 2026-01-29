@@ -1,0 +1,22 @@
+services:
+ cache-db:
+  image: redis:7-alpine
+  container_name: my_redis
+  ports:
+   - 6379:6379
+  restart: always
+  volumes:
+   - redis_data:/data
+ server:
+  build:
+   context: ./server 
+   dockerfile: Dockerfile
+  container_name: shopping_cart_server
+  ports:
+   - 3000:3000
+  env_file: ./server/.env
+  depends_on:
+   - cache-db
+  restart: always
+volumes:
+ redis_data:
