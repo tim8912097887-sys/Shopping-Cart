@@ -1,6 +1,7 @@
 import { Server } from "http";
 import { logger } from "./logger.js";
 import { dbDisconnection } from "../config/db.config.js";
+import { redisDisconnection } from "../cache/client.js";
 
 export const setupGracefulShutdown = (server: Server) => {
         // Flag prevent mutiple shutdown
@@ -21,6 +22,7 @@ export const setupGracefulShutdown = (server: Server) => {
                 });
                 logger.info("HTTP server closed.");
                 await dbDisconnection();
+                await redisDisconnection();
                 logger.info(`Database closed`);
                 clearTimeout(forceExitTimout);
                 process.exit(0);

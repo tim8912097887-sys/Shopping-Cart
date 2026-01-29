@@ -22,3 +22,12 @@ export const redisConnection = async() => {
         throw error;
     }
 }
+
+export const redisDisconnection = async() => {
+    try {
+        await redisClient.close();
+    } catch (error) {
+        logger.error(error);
+        throw error;
+    }
+}

@@ -6,6 +6,7 @@ import { UserModel } from "../model/user.model.js";
 import { CreateUserType } from "../schema/creatUser.schema.js";
 import { ApiError, ErrorCode, ErrorType } from "../custom/ApiError.js";
 import { jest } from '@jest/globals';
+import { redisClient, redisConnection, redisDisconnection } from "../cache/client.js";
 
 // Factory function
 const createUser = (username: string,password: string): CreateUserType => {
@@ -27,13 +28,16 @@ describe("Auth Integration Test",() => {
     // Database setup and teardown
     beforeAll(async() => {
         await mongoose.connect(env.MONGO_URI);
+        await redisConnection();
     },10000)
     afterAll(async() => {
         await mongoose.connection.close();
+        await redisDisconnection();
     },10000)
     // Implement test isolation by cleanup after each test
     afterEach(async() => {
         await UserModel.deleteMany({});
+        await redisClient.flushAll();
     },10000)
 
     describe("Signup User",() => {
@@ -146,7 +150,7 @@ describe("Auth Integration Test",() => {
 
         describe("Login User",() => {
             const mockUser = createUser("kd","Qwe1267?");
-            // Create user for login
+            //Create user for login
             beforeEach(async() => {
                      
                       // Directly create enhance speed
@@ -287,6 +291,58 @@ describe("Auth Integration Test",() => {
                 // Restore to functionality
                 modelSpy.mockRestore();
             })
+
+            it('When access over five time in five second,then respond with 429 statusCode and TooManyRequest Error', async() => {
+                // Arrange
+                const maxTimes = Number(env.LOGIN_WINDOW_TIMES);
+                for (let times = 0; times < maxTimes; times++) {
+                    const response = await request(app)
+                                           .post("/auth/login")
+                                           .send(mockUser);
+                    expect(response.status).not.toBe(429);
+                }
+                // Act
+                const response = await request(app)
+                                           .post("/auth/login")
+                                           .send(mockUser);
+                // Assertion
+                expect(response.status).toBe(429);
+                expect(response.body.data).toBeNull();
+                expect(response.body.error).toMatchObject({
+                    status: 429,
+                    detail: /too many/i
+                })
+            })
+
+            it('When login after five second that blocked by rate-limit,then respond with 200 statusCode and LoginUser and AccessToken', async() => {
+                // Arrange
+                const maxTimes = Number(env.LOGIN_WINDOW_TIMES);
+                for (let times = 0; times < maxTimes; times++) {
+                    const response = await request(app)
+                                           .post("/auth/login")
+                                           .send(mockUser);
+                    expect(response.status).not.toBe(429);
+                }
+                const loginBlock = await request(app)
+                       .post("/auth/login")
+                       .send(mockUser);
+                expect(loginBlock.status).toBe(429);
+                // Act
+                // Wait for cool down
+                await new Promise((resolve,_) => {
+                    setTimeout(() => {
+                         resolve("");
+                    },5000);
+                })
+                const response = await request(app)
+                                       .post("/auth/login")
+                                       .send(mockUser);
+                // Assertion
+                expect(response.status).toBe(200);
+                expect(response.body.error).toBeNull();
+                expect(response.body.data.user).toMatchObject(UserStructure);
+                expect(typeof response.body.data.accessToken).toBe("string");
+            },10000)
         })
 
         describe("Logout User",() => {
@@ -346,6 +402,7 @@ describe("Auth Integration Test",() => {
                 const loginRes = await request(app)
                                             .post("/auth/login")
                                             .send(user)
+                console.log(loginRes)
                 const cookie = loginRes.header['set-cookie'];
 
                 // Act
