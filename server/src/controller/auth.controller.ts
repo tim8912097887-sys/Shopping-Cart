@@ -16,7 +16,7 @@ export const signupController = asyncHandler(async(req,res) => {
 })
 
 export const loginController = asyncHandler(async(req,res) => {
-
+    
     if(!req.user) throw new ApiError(ErrorType.BAD_REQUEST,ErrorCode.BAD_REQUEST,"Bad Request",true);
     const existUser = await loginUser(req.user as LoginUserType);
     const payload = { sub: existUser._id.toString() };

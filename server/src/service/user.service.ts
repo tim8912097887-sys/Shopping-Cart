@@ -15,7 +15,7 @@ export const createUser = async(user: CreateUserType) => {
 }
 
 export const loginUser = async(user: LoginUserType) => {
-
+    
     let existUser = await UserModel.findOne({ email: user.email }).select("+password");
     if(!existUser) throw new ApiError(ErrorType.BAD_REQUEST,ErrorCode.BAD_REQUEST,`Email or Password is not correct`,true);
     // Check if it's currently locked

@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import authRouter from "./route/auth.route.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import cookieParser from "cookie-parser";
@@ -15,6 +16,7 @@ app.use("/api-docs",swaggerUi.serve,swaggerUi.setup(specs));
 // Body Parser
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 // Routes
 app.use("/auth",authRouter);
 
