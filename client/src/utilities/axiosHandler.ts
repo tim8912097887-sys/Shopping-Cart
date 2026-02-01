@@ -3,22 +3,41 @@ import type { AxiosResponse } from "axios";
 
 type User = Omit<SignupUserType,"confirmPassword" | "password"> & { _id: string };
 
-type Data = {
-   user: User
-} | {  
+type LoginData = {
    user: User
    accessToken: string
-} | {
-   accessToken: string
-} | {}
+}
 
-export type ReturnData = {
+type RefreshData = {
+   accessToken: string 
+}
+
+type SignupData = {
+   user: User
+}
+type LogoutData = {}
+type Data = LoginData | RefreshData | LogoutData | SignupData
+
+interface ReturnData {
    state: "success"
    error: null
    data: Data
    meta: {
         timestamp: string
    }
+}
+
+export interface LoginReturn extends ReturnData {
+   data: LoginData
+}
+export interface LogoutReturn extends ReturnData {
+   data: LogoutData
+}
+export interface RefreshReturn extends ReturnData {
+   data: RefreshData
+}
+export interface SignupReturn extends ReturnData {
+   data: SignupData
 }
 
 export const axiosHandler = <TArgs extends any[],TReturn>(apiCall: (...args: TArgs) => Promise<AxiosResponse<TReturn>>) => (async(...params: TArgs): Promise<TReturn> => {

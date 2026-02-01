@@ -3,6 +3,9 @@ import { useForm, type SubmitHandler } from "react-hook-form"
 import v from "validator"
 import { login } from "@/api/auth"
 import { useMutation } from "@tanstack/react-query"
+import { useDispatch } from "react-redux"
+import { loginUser } from "@/stores/auth/authSlice"
+import { useState } from "react"
 
 type InputValue = {
   email: string
@@ -10,12 +13,15 @@ type InputValue = {
 }
 
 const Login = () => {
-
+  
+  const [isPersistent,setIsPersistent] = useState(false);
+  const dispatch = useDispatch();
   const navigation = useNavigate();
   const { mutate,isError,error,isPending } = useMutation({
     mutationFn: login,
-    onSuccess: () => {
-       console.log("Success");
+    onSuccess: (data) => {
+       // Store return value
+       dispatch(loginUser({ accessToken: data.data.accessToken,isPersistent }));
        navigation("/");
     }
   });
@@ -97,6 +103,16 @@ const Login = () => {
             />
           </div>
           {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+          <div className="flex items-center">
+            <input 
+                  type="checkbox"
+                  name="remember-me" 
+                  id="remember-me" 
+                  onChange={() => setIsPersistent(pre => !pre)}
+                  checked={isPersistent}
+            />
+            <label htmlFor="remember-me">Remember Me?</label>
+          </div>
           {/* Submit Button */}
           <button 
             type="submit" 

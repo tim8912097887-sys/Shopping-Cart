@@ -1,10 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "@/App";
-import Home from "@pages/Home";
-import Deals from "@pages/Deals";
-import Login from "@pages/Login";
-import SignUp from "@pages/SignUp";
-import Cart from "@pages/Cart";
+import { lazy } from "react";
+
+const Home = lazy(() => import("@pages/Home"));
+const Deals = lazy(() => import("@pages/Deals"));
+const Login = lazy(() => import("@pages/Login"));
+const SignUp = lazy(() => import("@pages/SignUp"));
+const Cart = lazy(() => import("@pages/Cart"));
+const Profile = lazy(() => import("@pages/Profile"));
+const AuthProtect = lazy(() => import("@components/AuthProtect"));
+const GuestProtect = lazy(() => import("@components/GuestProtect"));
 
 export const router = createBrowserRouter([
     {
@@ -16,20 +21,34 @@ export const router = createBrowserRouter([
                 Component: Home
             },
             {
-                path: "deals",
-                Component: Deals
+                Component: AuthProtect,
+                children: [
+                    {
+                        path: "cart",
+                        Component: Cart
+                    },
+                    {
+                        path: "deals",
+                        Component: Deals
+                    },
+                    {
+                        path: "profile",
+                        Component: Profile
+                    }
+                ]
             },
             {
-                path: "login",
-                Component: Login
-            },
-            {
-                path: "signup",
-                Component: SignUp
-            },
-            {
-                path: "cart",
-                Component: Cart
+                Component: GuestProtect,
+                children: [
+                    {
+                        path: "login",
+                        Component: Login
+                    },
+                    {
+                        path: "signup",
+                        Component: SignUp
+                    }
+                ]
             }
         ]
     }

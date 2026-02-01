@@ -1,17 +1,19 @@
 import { Outlet } from "react-router-dom"
 import Header from "@components/Header"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-
-const queryClient = new QueryClient();
+import CheckMe from "@components/CheckMe"
+import { Suspense } from "react"
+import LoadingSpinner from "./components/LoadingSpinner"
 
 function App() {
 
   return (
     <>
-     <QueryClientProvider client={queryClient}>
-        <Header/>
-        <Outlet/>
-     </QueryClientProvider>
+       <CheckMe>
+         <Header/>
+         <Suspense fallback={<LoadingSpinner size={25} />}>
+           <Outlet/>
+         </Suspense>
+       </CheckMe>
     </>
   )
 }
