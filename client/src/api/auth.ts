@@ -1,7 +1,7 @@
-import { axiosHandler, type LoginReturn, type LogoutReturn, type RefreshReturn, type SignupReturn } from "@/utilities/axiosHandler";
-import { authAxios } from "./authAxios";
-import type { LoginUserType } from "@/schemas/loginUser";
-import type { SignupUserType } from "@/schemas/signupUser";
+import { axiosHandler, type LoginReturn, type LogoutReturn, type RefreshReturn, type SignupReturn } from "@utilities/axiosHandler";
+import { authAxios } from "@api/authAxios";
+import type { LoginUserType } from "@schemas/loginUser";
+import type { SignupUserType } from "@schemas/signupUser";
 
 export const login = axiosHandler((loginUser: LoginUserType) => {
     return authAxios.post<LoginReturn>("/login",loginUser,{

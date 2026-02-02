@@ -1,4 +1,4 @@
-import { signup } from "@/api/auth"
+import { signup } from "@api/auth"
 import { useMutation } from "@tanstack/react-query"
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"

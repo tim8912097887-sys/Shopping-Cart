@@ -1,10 +1,10 @@
 import { Link, useNavigate } from "react-router-dom"
 import { useForm, type SubmitHandler } from "react-hook-form"
 import v from "validator"
-import { login } from "@/api/auth"
+import { login } from "@api/auth"
 import { useMutation } from "@tanstack/react-query"
 import { useDispatch } from "react-redux"
-import { loginUser } from "@/stores/auth/authSlice"
+import { loginUser } from "@stores/auth/authSlice"
 import { useState } from "react"
 
 type InputValue = {

@@ -1,4 +1,4 @@
-import type { SignupUserType } from "@/schemas/signupUser";
+import type { SignupUserType } from "@schemas/signupUser";
 import type { AxiosResponse } from "axios";
 
 type User = Omit<SignupUserType,"confirmPassword" | "password"> & { _id: string };

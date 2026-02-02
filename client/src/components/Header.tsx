@@ -1,4 +1,4 @@
-import type { RootState } from "@/stores/store"
+import type { RootState } from "@stores/store"
 import { BsFillPersonFill } from "react-icons/bs"
 import { FaCartPlus } from "react-icons/fa"
 import { useSelector } from "react-redux"

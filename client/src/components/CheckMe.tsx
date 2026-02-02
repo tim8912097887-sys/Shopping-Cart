@@ -1,6 +1,6 @@
-import { refresh } from "@/api/auth";
-import { loginUser } from "@/stores/auth/authSlice";
-import type { RootState } from "@/stores/store";
+import { refresh } from "@api/auth";
+import { loginUser } from "@stores/auth/authSlice";
+import type { RootState } from "@stores/store";
 import { useQuery } from "@tanstack/react-query";
 import { type PropsWithChildren } from "react"
 import { useDispatch, useSelector } from "react-redux"
