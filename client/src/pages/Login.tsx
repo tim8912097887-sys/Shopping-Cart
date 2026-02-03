@@ -49,7 +49,7 @@ const Login = () => {
           <p className="text-slate-500 mt-2">Login and start your journey today.</p>
         </div>
 
-        <form className="space-y-5" onSubmit={handleSubmit(handleLogin)}>
+        <form noValidate className="space-y-5" onSubmit={handleSubmit(handleLogin)}>
           {/* Input Group: Email */}
           <div className="flex flex-col gap-1.5">
             <label htmlFor="email" className="text-sm font-medium text-slate-700 ml-1">
@@ -61,7 +61,7 @@ const Login = () => {
               placeholder="name@company.com"
               className="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none transition-all focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 placeholder:text-slate-400"
               {...register("email",{
-                required: "Email Requred",
+                required: "Email Required",
                 maxLength: {
                   value: 50,
                   message: "Email at most fifty character"

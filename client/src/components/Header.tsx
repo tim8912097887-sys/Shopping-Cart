@@ -25,7 +25,7 @@ const Header = () => {
              <div className="flex items-center gap-2">
                 {
                   accessToken?
-                   <Link to="/profile">
+                   <Link data-testid="profile_link" to="/profile">
                      <BsFillPersonFill className="border-2 w-6 h-6 rounded-full" />
                    </Link>
                   :
@@ -36,7 +36,7 @@ const Header = () => {
                   </>
                 }
              </div>
-             <Link to="/cart">
+             <Link data-testid="cart_link" to="/cart">
                <FaCartPlus className="text-2xl" />
              </Link>
            </div>
